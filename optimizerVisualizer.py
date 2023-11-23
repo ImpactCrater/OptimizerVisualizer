@@ -1,27 +1,22 @@
 #! /usr/bin/python3
 # -*- coding: utf8 -*-
 
-import os, time, random, re, glob
 from os.path import expanduser
 from pathlib import Path
 import math
 import random
 import numpy
-from io import BytesIO
 import torch
 from torch.utils.data import DataLoader, Dataset
-import pyaudio
 import torchvision
 from torchvision import transforms, utils
 from adabelief_pytorch import AdaBelief
 import AdaDerivative
 from lion_pytorch import Lion
-import cv2
 import matplotlib
 from matplotlib import pyplot
 from matplotlib.colors import LogNorm
 from matplotlib.animation import FuncAnimation
-# from torchsummary import summary
 
 
 #python3 ~/Program/OptimizerVisualizer/optimizerVisualizer.py
@@ -153,7 +148,6 @@ else:
 
 
 
-
 #optimizerDictionary = {'SGD': {}, 'AdaGrad': {}, 'RMSprop': {}, 'Adadelta': {}, 'Adam': {}, 'AdamW': {}, 'RAdam': {}, 'AdaBelief': {}, 'AdaDerivative': {}, 'Lion': {}}
 optimizerDictionary = {'SGD': {}, 'AdaGrad': {}, 'RMSprop': {}, 'Adadelta': {}, 'AdamW': {}, 'RAdam': {}, 'AdaBelief': {}, 'AdaDerivative': {}, 'Lion': {}}
 
@@ -163,10 +157,10 @@ optimizerDictionary['RMSprop']['learningRate'] = 2e-2
 optimizerDictionary['Adadelta']['learningRate'] = 1e+1
 #optimizerDictionary['Adam']['learningRate'] = 1e-1
 optimizerDictionary['AdamW']['learningRate'] = 1e-1
-optimizerDictionary['RAdam']['learningRate'] = 2e-1
-optimizerDictionary['AdaBelief']['learningRate'] = 5e-2
+optimizerDictionary['RAdam']['learningRate'] = 1e-1
+optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
 optimizerDictionary['AdaDerivative']['learningRate'] = 1e-1
-optimizerDictionary['Lion']['learningRate'] = 2e-2
+optimizerDictionary['Lion']['learningRate'] = 5e-2
 
 optimizerDictionary['SGD']['color'] = 'lime'
 optimizerDictionary['AdaGrad']['color'] = 'orange'
@@ -211,8 +205,6 @@ for key in optimizerDictionary:
 
 
 
-
-
 X = numpy.arange(-1, 1, 0.025)
 Y = numpy.arange(-1, 1, 0.025)
 X, Y = numpy.meshgrid(X, Y)
@@ -230,8 +222,6 @@ axis1 = figure1.add_subplot(1, 1, 1, projection='3d', elev=45, azim=330, zorder=
 axis1.xaxis.pane.set_facecolor((0.5, 0.5, 0.5, 0.5))
 axis1.yaxis.pane.set_facecolor((0.5, 0.5, 0.5, 0.5))
 axis1.zaxis.pane.set_facecolor((0.5, 0.5, 0.5, 0.5))
-
-
 
 
 
@@ -259,54 +249,10 @@ def update(i):
         #axis1.set_ylabel('y', fontsize=8)
         #axis1.set_zlabel('z', fontsize=8)
 
+        axis1.set_ylim(- 1, 1)
+
         axis1.legend(bbox_to_anchor=(1.25, 1), loc='upper right', fontsize=16)
 
 #pyplot.savefig(plotImagePath + '/{}_optim_{}.png'.format(objectiveFunctionName, key))
 animation = FuncAnimation(fig=figure1, func=update, frames=numberOfFrames, interval=100, repeat=False)
 animation.save(plotImagePath + '/Optimizers (' + objectiveFunctionName + ').gif')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
