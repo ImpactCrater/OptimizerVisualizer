@@ -20,4 +20,11 @@ pip install lion-pytorch
 <div align="center">
 	<img src="plots/Optimizers (Custom).gif"/>
 </div>
-</a>
+
+<div align="center">
+	<img src="plots/Optimizers (Sphere).gif"/>
+</div>
+
+<div align="center">
+	<img src="plots/Optimizers (Rosenbrock).gif"/>
+</div>
