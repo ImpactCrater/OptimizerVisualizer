@@ -250,6 +250,7 @@ def update(i):
         #axis1.set_ylabel('y', fontsize=8)
         #axis1.set_zlabel('z', fontsize=8)
 
+        axis1.set_xlim(- 1, 1)
         axis1.set_ylim(- 1, 1)
 
         axis1.legend(bbox_to_anchor=(1.25, 1), loc='upper right', fontsize=16)
