@@ -18,6 +18,6 @@ pip install lion-pytorch
 
 ### My Result
 <div align="center">
-	<img src="img/Optimizers (Custom).gif"/>
+	<img src="plots/Optimizers (Custom).gif"/>
 </div>
 </a>
