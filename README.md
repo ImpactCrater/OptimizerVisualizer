@@ -12,7 +12,6 @@ cd ~/
 pip install --upgrade pip
 git clone https://github.com/ImpactCrater/OptimizerVisualizer 
 pip install matplotlib
-pip install adabelief-pytorch
 pip install lion-pytorch
 ```
 
@@ -27,4 +26,8 @@ pip install lion-pytorch
 
 <div align="center">
 	<img src="plots/Optimizers (Rosenbrock).gif"/>
+</div>
+
+<div align="center">
+	<img src="plots/Optimizers (Rastrigin).gif"/>
 </div>
