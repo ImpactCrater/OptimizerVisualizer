@@ -11,8 +11,8 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 import torchvision
 from torchvision import transforms, utils
-from adabelief_pytorch import AdaBelief
 import AdaDerivative
+import AdaBelief
 from lion_pytorch import Lion
 import matplotlib
 from matplotlib import pyplot
@@ -230,7 +230,7 @@ for key in optimizerDictionary:
     elif key == 'RAdam':
         optimizerDictionary['RAdam']['optimizer'] = torch.optim.RAdam(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['RAdam']['learningRate'],  betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3)
     elif key == 'AdaBelief':
-        optimizerDictionary['AdaBelief']['optimizer'] = AdaBelief(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaBelief']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3, rectify=False)
+        optimizerDictionary['AdaBelief']['optimizer'] = AdaBelief.AdaBelief(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaBelief']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3, rectify=False)
     elif key == 'AdaDerivative':
         optimizerDictionary['AdaDerivative']['optimizer'] = AdaDerivative.AdaDerivative(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaDerivative']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3, rectify=False)
     elif key == 'Lion':
