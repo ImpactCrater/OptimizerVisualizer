@@ -35,6 +35,7 @@ plotImagePath = homePath + "/Program/OptimizerVisualizer/Plots"
 #objectiveFunctionName = 'Rosenbrock'
 #objectiveFunctionName = 'SixHumpCamel'
 #objectiveFunctionName = 'Sphere'
+#objectiveFunctionName = 'Rastrigin'
 objectiveFunctionName = 'Custom'
 
 
@@ -88,6 +89,19 @@ def sphereFunction(x, y):
     return z
 
 
+def rastriginFunction(x, y):
+    scaleX = torch.tensor(5.12)
+    scaleY = torch.tensor(5.12)
+    rangeZ = 79.98309326 # Maximum: 79.98309326, Minimum: 0.00000000
+    scaleZ = torch.tensor(rangeZ)
+    x = x * scaleX
+    y = y * scaleY
+    a = 2
+    z = a + (x ** 2 - a * torch.cos(2 * pi * x)) + a + (y ** 2 - a * torch.cos(2 * pi * y))
+    z = z / scaleZ * (1 - deltaZ) + deltaZ
+    return z
+
+
 def customFunction(x, y):
     scaleX1 = torch.tensor(2)
     scaleY1 = torch.tensor(- 1)
@@ -132,6 +146,9 @@ def objectiveFunction(x, y):
     elif objectiveFunctionName == 'Sphere':
         return sphereFunction(x, y)
 
+    elif objectiveFunctionName == 'Rastrigin':
+        return rastriginFunction(x, y)
+
     elif objectiveFunctionName == 'Custom':
         return customFunction(x, y)
 
@@ -152,16 +169,28 @@ else:
 #optimizerDictionary = {'SGD': {}, 'AdaGrad': {}, 'RMSprop': {}, 'Adadelta': {}, 'Adam': {}, 'AdamW': {}, 'RAdam': {}, 'AdaBelief': {}, 'AdaDerivative': {}, 'Lion': {}}
 optimizerDictionary = {'SGD': {}, 'AdaGrad': {}, 'RMSprop': {}, 'Adadelta': {}, 'AdamW': {}, 'RAdam': {}, 'AdaBelief': {}, 'AdaDerivative': {}, 'Lion': {}}
 
-optimizerDictionary['SGD']['learningRate'] = 1e-1
-optimizerDictionary['AdaGrad']['learningRate'] = 2e-1
-optimizerDictionary['RMSprop']['learningRate'] = 2e-2
-optimizerDictionary['Adadelta']['learningRate'] = 1e+1
-#optimizerDictionary['Adam']['learningRate'] = 1e-1
-optimizerDictionary['AdamW']['learningRate'] = 1e-1
-optimizerDictionary['RAdam']['learningRate'] = 1e-1
-optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
-optimizerDictionary['AdaDerivative']['learningRate'] = 1e-1
-optimizerDictionary['Lion']['learningRate'] = 5e-2
+if objectiveFunctionName == 'Rastrigin':
+    optimizerDictionary['SGD']['learningRate'] = 2e-1
+    optimizerDictionary['AdaGrad']['learningRate'] = 5e-1
+    optimizerDictionary['RMSprop']['learningRate'] = 5e-2
+    optimizerDictionary['Adadelta']['learningRate'] = 2e+1
+    #optimizerDictionary['Adam']['learningRate'] = 2e-1
+    optimizerDictionary['AdamW']['learningRate'] = 1e-1
+    optimizerDictionary['RAdam']['learningRate'] = 2e-1
+    optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
+    optimizerDictionary['AdaDerivative']['learningRate'] = 1e-1
+    optimizerDictionary['Lion']['learningRate'] = 1e-1
+else:
+    optimizerDictionary['SGD']['learningRate'] = 1e-1
+    optimizerDictionary['AdaGrad']['learningRate'] = 2e-1
+    optimizerDictionary['RMSprop']['learningRate'] = 2e-2
+    optimizerDictionary['Adadelta']['learningRate'] = 1e+1
+    #optimizerDictionary['Adam']['learningRate'] = 1e-1
+    optimizerDictionary['AdamW']['learningRate'] = 1e-1
+    optimizerDictionary['RAdam']['learningRate'] = 1e-1
+    optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
+    optimizerDictionary['AdaDerivative']['learningRate'] = 1e-1
+    optimizerDictionary['Lion']['learningRate'] = 5e-2
 
 optimizerDictionary['SGD']['color'] = 'lime'
 optimizerDictionary['AdaGrad']['color'] = 'orange'
@@ -175,9 +204,13 @@ optimizerDictionary['AdaDerivative']['color'] = 'red'
 optimizerDictionary['Lion']['color'] = 'turquoise'
 
 for key in optimizerDictionary:
-    x = torch.tensor(- 0.9, requires_grad=True)
-    y = torch.tensor(0.9, requires_grad=True)
-    optimizerDictionary[key]['parameters'] = [torch.tensor(- 0.9, requires_grad=True), torch.tensor(0.9, requires_grad=True)]
+    if objectiveFunctionName == 'Rastrigin':
+        x = torch.tensor(- 0.7, requires_grad=True)
+        y = torch.tensor(0.8, requires_grad=True)
+    else:
+        x = torch.tensor(- 0.9, requires_grad=True)
+        y = torch.tensor(0.9, requires_grad=True)
+    optimizerDictionary[key]['parameters'] = [x, y]
     optimizerDictionary[key]['xList'] = [optimizerDictionary[key]['parameters'][0].item()]
     optimizerDictionary[key]['yList'] = [optimizerDictionary[key]['parameters'][1].item()]
     optimizerDictionary[key]['zList'] = [objectiveFunction(x, y).item()]
@@ -217,22 +250,26 @@ print("Maximum: {:.8f}".format(maximum))
 minimum = torch.min(Z)
 print("Minimum: {:.8f}".format(minimum))
  
-figure1 = pyplot.figure(figsize=(12, 10))
-figure1.subplots_adjust(left=-0.02, right=0.8, bottom=0.02, top=0.98)
-axis1 = figure1.add_subplot(1, 1, 1, projection='3d', elev=45, azim=330, zorder=1)
+figure1 = pyplot.figure(figsize=(20, 10))
+figure1.subplots_adjust(left=0., right=1., bottom=0., top=1., wspace=0.)
+gridspec1 = figure1.add_gridspec(20, 40)
+axis1 = figure1.add_subplot(gridspec1[1:19, 0:20], projection='3d', elev=45, azim=330, zorder=1, facecolor=(0.75, 0.75, 0.75, 0.5))
 axis1.xaxis.pane.set_facecolor((0.5, 0.5, 0.5, 0.5))
 axis1.yaxis.pane.set_facecolor((0.5, 0.5, 0.5, 0.5))
 axis1.zaxis.pane.set_facecolor((0.5, 0.5, 0.5, 0.5))
-
-
+axis2 = figure1.add_subplot(gridspec1[4:16, 27:39], facecolor=(0.9, 0.9, 0.9, 0.5))
+#contour1.clabel(fmt='%1.1f', fontsize=8)
 
 
 def update(i):
     print('Step: {:3d}'.format(i + 1))
 
     axis1.cla()
+    axis2.cla()
     plotWireframe1 = axis1.plot_wireframe(X, Y, Z, rstride=2, cstride=2, zorder=1)
     plotSurface1 = axis1.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap='ocean', norm=LogNorm(), alpha=0.8, zorder=1)
+    plot2dContour = axis2.pcolormesh(X, Y, Z, cmap='ocean', norm=LogNorm(), zorder=1)
+    contour1 = axis2.contour(X, Y, Z,  levels=16, colors=['black'])
 
     for key in optimizerDictionary:
         optimizerDictionary[key]['optimizer'].zero_grad()
@@ -245,6 +282,7 @@ def update(i):
         labelString = key + ': lr ' + str(optimizerDictionary[key]['learningRate'])
         plot1 = axis1.plot(optimizerDictionary[key]['xList'], optimizerDictionary[key]['yList'], optimizerDictionary[key]['zList'], color=optimizerDictionary[key]['color'], marker='o',  linestyle='solid', alpha=0.75, markersize=1, zorder=4)
         plot1 = axis1.plot(optimizerDictionary[key]['xList'][-1], optimizerDictionary[key]['yList'][-1], optimizerDictionary[key]['zList'][-1], color=optimizerDictionary[key]['color'], marker='o',  linestyle='solid', alpha=1.0, markersize=8, zorder=4, label=labelString)
+        plotScatter1 = axis2.scatter(optimizerDictionary[key]['xList'][-1], optimizerDictionary[key]['yList'][-1], s=48, color =optimizerDictionary[key]['color'], alpha=0.75, zorder=2)
 
         #axis1.set_xlabel('x', fontsize=8)
         #axis1.set_ylabel('y', fontsize=8)
@@ -252,8 +290,10 @@ def update(i):
 
         axis1.set_xlim(- 1, 1)
         axis1.set_ylim(- 1, 1)
+        axis2.set_xlim(- 1, 1)
+        axis2.set_ylim(- 1, 1)
 
-        axis1.legend(bbox_to_anchor=(1.25, 1), loc='upper right', fontsize=16)
+        axis1.legend(bbox_to_anchor=(1., 1.), loc='upper left', fontsize=16)
 
 #pyplot.savefig(plotImagePath + '/{}_optim_{}.png'.format(objectiveFunctionName, key))
 animation = FuncAnimation(fig=figure1, func=update, frames=numberOfFrames, interval=100, repeat=False)
