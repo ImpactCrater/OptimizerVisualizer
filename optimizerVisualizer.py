@@ -165,8 +165,6 @@ else:
 
 
 
-
-#optimizerDictionary = {'SGD': {}, 'AdaGrad': {}, 'RMSprop': {}, 'Adadelta': {}, 'Adam': {}, 'AdamW': {}, 'RAdam': {}, 'AdaBelief': {}, 'AdaDerivative': {}, 'Lion': {}}
 optimizerDictionary = {'SGD': {}, 'AdaGrad': {}, 'RMSprop': {}, 'Adadelta': {}, 'AdamW': {}, 'RAdam': {}, 'AdaBelief': {}, 'AdaDerivative': {}, 'Lion': {}}
 
 if objectiveFunctionName == 'Rastrigin':
@@ -174,7 +172,6 @@ if objectiveFunctionName == 'Rastrigin':
     optimizerDictionary['AdaGrad']['learningRate'] = 5e-1
     optimizerDictionary['RMSprop']['learningRate'] = 5e-2
     optimizerDictionary['Adadelta']['learningRate'] = 2e+1
-    #optimizerDictionary['Adam']['learningRate'] = 2e-1
     optimizerDictionary['AdamW']['learningRate'] = 1e-1
     optimizerDictionary['RAdam']['learningRate'] = 2e-1
     optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
@@ -185,7 +182,6 @@ else:
     optimizerDictionary['AdaGrad']['learningRate'] = 2e-1
     optimizerDictionary['RMSprop']['learningRate'] = 2e-2
     optimizerDictionary['Adadelta']['learningRate'] = 1e+1
-    #optimizerDictionary['Adam']['learningRate'] = 1e-1
     optimizerDictionary['AdamW']['learningRate'] = 1e-1
     optimizerDictionary['RAdam']['learningRate'] = 1e-1
     optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
@@ -193,13 +189,12 @@ else:
     optimizerDictionary['Lion']['learningRate'] = 5e-2
 
 optimizerDictionary['SGD']['color'] = 'lime'
-optimizerDictionary['AdaGrad']['color'] = 'orange'
+optimizerDictionary['AdaGrad']['color'] = 'darkorange'
 optimizerDictionary['RMSprop']['color'] = 'purple'
-optimizerDictionary['Adadelta']['color'] = 'brown'
-#optimizerDictionary['Adam']['color'] = 'olive'
-optimizerDictionary['AdamW']['color'] = 'yellow'
-optimizerDictionary['RAdam']['color'] = 'green'
-optimizerDictionary['AdaBelief']['color'] = 'blue'
+optimizerDictionary['Adadelta']['color'] = 'green'
+optimizerDictionary['AdamW']['color'] = 'blue'
+optimizerDictionary['RAdam']['color'] = 'magenta'
+optimizerDictionary['AdaBelief']['color'] = 'yellow'
 optimizerDictionary['AdaDerivative']['color'] = 'red'
 optimizerDictionary['Lion']['color'] = 'turquoise'
 
@@ -223,8 +218,6 @@ for key in optimizerDictionary:
         optimizerDictionary['RMSprop']['optimizer'] = torch.optim.RMSprop(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['RMSprop']['learningRate'])
     elif key == 'Adadelta':
         optimizerDictionary['Adadelta']['optimizer'] = torch.optim.Adadelta(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['Adadelta']['learningRate'])
-    #elif key == 'Adam':
-        #optimizerDictionary['Adam']['optimizer'] = torch.optim.Adam(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['Adam']['learningRate'])
     elif key == 'AdamW':
         optimizerDictionary['AdamW']['optimizer'] = torch.optim.AdamW(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdamW']['learningRate'])
     elif key == 'RAdam':
@@ -235,6 +228,7 @@ for key in optimizerDictionary:
         optimizerDictionary['AdaDerivative']['optimizer'] = AdaDerivative.AdaDerivative(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaDerivative']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3, rectify=False)
     elif key == 'Lion':
         optimizerDictionary['Lion']['optimizer'] = Lion(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['Lion']['learningRate'], weight_decay=1e-8)
+
 
 
 
