@@ -37,6 +37,7 @@ plotImagePath = homePath + "/Program/OptimizerVisualizer/Plots"
 #objectiveFunctionName = 'Sphere'
 #objectiveFunctionName = 'Rastrigin'
 objectiveFunctionName = 'Custom'
+#objectiveFunctionName = 'Custom2'
 
 
 numberOfFrames = 100
@@ -135,6 +136,33 @@ def customFunction(x, y):
     return z
 
 
+def custom2Function(x, y):
+    scaleX1 = torch.tensor(3)
+    scaleY1 = torch.tensor(3)
+    rangeZ1 = 6.80937624 + 7.99237823 # Maximum: 6.80937624, Minimum: -7.99237823
+    scaleZ1 = torch.tensor(rangeZ1)
+    shiftZ1 = torch.tensor(7.99237823)
+    x1 = x * scaleX1
+    y1 = y * scaleY1
+
+    term1 = x1 - torch.sin(2 * x1 + 3 * y1) - torch.cos(3 * x1 - 5 * y1)
+    term2 = y1 - torch.sin(x1 - 2 * y1) + torch.cos(x1 + 3 * y1)
+    z1 = term1 + term2
+    z1 = (z1 + shiftZ1) / scaleZ1 * (1 - deltaZ) + deltaZ
+
+    shiftX2 = torch.tensor(- 0.5)
+    shiftY2 = torch.tensor(0.5)
+    rangeZ2 = 1.48755252 # Maximum: 1.48755252, Minimum: 0.00000000
+    scaleZ2 = torch.tensor(rangeZ2)
+    x2 = x + shiftX2
+    y2 = y + shiftY2
+    z2 = torch.sqrt((x2 ** 2 + y2 ** 2) / 2)
+    z2 = z2 / scaleZ2 * (1 - deltaZ) + deltaZ
+
+    z = 0.3 * z1 + 0.7 * z2
+    return z
+
+
 
 def objectiveFunction(x, y):
     if objectiveFunctionName == 'Rosenbrock':
@@ -151,6 +179,9 @@ def objectiveFunction(x, y):
 
     elif objectiveFunctionName == 'Custom':
         return customFunction(x, y)
+
+    elif objectiveFunctionName == 'Custom2':
+        return custom2Function(x, y)
 
 
 
@@ -188,14 +219,14 @@ else:
     optimizerDictionary['AdaDerivative']['learningRate'] = 1e-1
     optimizerDictionary['Lion']['learningRate'] = 5e-2
 
-optimizerDictionary['SGD']['color'] = 'lime'
+optimizerDictionary['SGD']['color'] = 'magenta'
 optimizerDictionary['AdaGrad']['color'] = 'darkorange'
 optimizerDictionary['RMSprop']['color'] = 'purple'
 optimizerDictionary['Adadelta']['color'] = 'green'
 optimizerDictionary['AdamW']['color'] = 'blue'
-optimizerDictionary['RAdam']['color'] = 'magenta'
-optimizerDictionary['AdaBelief']['color'] = 'yellow'
-optimizerDictionary['AdaDerivative']['color'] = 'red'
+optimizerDictionary['RAdam']['color'] = 'lime'
+optimizerDictionary['AdaBelief']['color'] = 'red'
+optimizerDictionary['AdaDerivative']['color'] = 'yellow'
 optimizerDictionary['Lion']['color'] = 'turquoise'
 
 for key in optimizerDictionary:
