@@ -31,3 +31,7 @@ pip install lion-pytorch
 <div align="center">
 	<img src="plots/Optimizers (Rastrigin).gif"/>
 </div>
+
+<div align="center">
+	<img src="plots/Optimizers (Custom2).gif"/>
+</div>
