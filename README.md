@@ -39,7 +39,3 @@ pip install lion-pytorch
 <div align="center">
 	<img src="plots/Optimizers (Custom3).gif"/>
 </div>
-
-<div align="center">
-	<img src="Images/AdaFast Formula-TeX-1.png"/>
-</div>
