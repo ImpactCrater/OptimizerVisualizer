@@ -13,7 +13,6 @@ import torchvision
 from torchvision import transforms, utils
 import AdaDerivative
 import AdaBelief
-import AdaFast
 from lion_pytorch import Lion
 import matplotlib
 from matplotlib import pyplot
@@ -232,18 +231,17 @@ else:
 
 
 
-optimizerDictionary = {'SGD': {}, 'AdaGrad': {}, 'RMSprop': {}, 'Adadelta': {}, 'AdamW': {}, 'RAdam': {}, 'AdaBelief': {}, 'AdaDerivative': {}, 'Lion': {}, 'AdaFast': {}}
+optimizerDictionary = {'SGD': {}, 'AdaGrad': {}, 'RMSprop': {}, 'Adadelta': {}, 'AdamW': {}, 'RAdam': {}, 'AdaBelief': {}, 'AdaDerivative': {}, 'Lion': {}}
 
 optimizerDictionary['SGD']['color'] = 'magenta'
 optimizerDictionary['AdaGrad']['color'] = 'darkorange'
 optimizerDictionary['RMSprop']['color'] = 'purple'
 optimizerDictionary['Adadelta']['color'] = 'green'
-optimizerDictionary['AdamW']['color'] = 'blue'
+optimizerDictionary['AdamW']['color'] = 'red'
 optimizerDictionary['RAdam']['color'] = 'lime'
-optimizerDictionary['AdaBelief']['color'] = 'red'
-optimizerDictionary['AdaDerivative']['color'] = 'lightsteelblue'
+optimizerDictionary['AdaBelief']['color'] = 'yellow'
+optimizerDictionary['AdaDerivative']['color'] = 'blue'
 optimizerDictionary['Lion']['color'] = 'turquoise'
-optimizerDictionary['AdaFast']['color'] = 'yellow'
 
 
 
@@ -259,7 +257,6 @@ for objectiveFunctionName in objectiveFunctionNames:
         optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
         optimizerDictionary['AdaDerivative']['learningRate'] = 1e-1
         optimizerDictionary['Lion']['learningRate'] = 1e-1
-        optimizerDictionary['AdaFast']['learningRate'] = 1e-1
     else:
         optimizerDictionary['SGD']['learningRate'] = 1e-1
         optimizerDictionary['AdaGrad']['learningRate'] = 2e-1
@@ -270,7 +267,6 @@ for objectiveFunctionName in objectiveFunctionNames:
         optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
         optimizerDictionary['AdaDerivative']['learningRate'] = 1e-1
         optimizerDictionary['Lion']['learningRate'] = 5e-2
-        optimizerDictionary['AdaFast']['learningRate'] = 1e-1
 
     for key in optimizerDictionary:
         if objectiveFunctionName == 'Rastrigin':
@@ -301,8 +297,6 @@ for objectiveFunctionName in objectiveFunctionNames:
             optimizerDictionary['RAdam']['optimizer'] = torch.optim.RAdam(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['RAdam']['learningRate'],  betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3)
         elif key == 'AdaBelief':
             optimizerDictionary['AdaBelief']['optimizer'] = AdaBelief.AdaBelief(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaBelief']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3)
-        elif key == 'AdaFast':
-            optimizerDictionary['AdaFast']['optimizer'] = AdaFast.AdaFast(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaFast']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3)
         elif key == 'AdaDerivative':
             optimizerDictionary['AdaDerivative']['optimizer'] = AdaDerivative.AdaDerivative(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaDerivative']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3, rectify=False)
         elif key == 'Lion':
