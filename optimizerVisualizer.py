@@ -11,9 +11,11 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 import torchvision
 from torchvision import transforms, utils
+import SGD
+import AdamW
 import AdaDerivative
 import AdaBelief
-from lion_pytorch import Lion
+import Lion
 import matplotlib
 from matplotlib import pyplot
 from matplotlib.colors import LogNorm
@@ -231,42 +233,27 @@ else:
 
 
 
-optimizerDictionary = {'SGD': {}, 'AdaGrad': {}, 'RMSprop': {}, 'Adadelta': {}, 'AdamW': {}, 'RAdam': {}, 'AdaBelief': {}, 'AdaDerivative': {}, 'Lion': {}}
+
+optimizerDictionary = {'SGD': {}, 'Lion': {}, 'AdamW': {}, 'AdaBelief': {}, 'AdaDerivative': {}}
 
 optimizerDictionary['SGD']['color'] = 'magenta'
-optimizerDictionary['AdaGrad']['color'] = 'darkorange'
-optimizerDictionary['RMSprop']['color'] = 'purple'
-optimizerDictionary['Adadelta']['color'] = 'green'
-optimizerDictionary['AdamW']['color'] = 'red'
-optimizerDictionary['RAdam']['color'] = 'lime'
-optimizerDictionary['AdaBelief']['color'] = 'yellow'
-optimizerDictionary['AdaDerivative']['color'] = 'blue'
-optimizerDictionary['Lion']['color'] = 'turquoise'
+optimizerDictionary['Lion']['color'] = 'darkorange'
+optimizerDictionary['AdamW']['color'] = 'blue'
+optimizerDictionary['AdaBelief']['color'] = 'red'
+optimizerDictionary['AdaDerivative']['color'] = 'yellow'
+
 
 
 
 for objectiveFunctionName in objectiveFunctionNames:
+    optimizerDictionary['SGD']['learningRate'] = 1e-1
+    optimizerDictionary['Lion']['learningRate'] = 1e-1
+    optimizerDictionary['AdamW']['learningRate'] = 1e-1
+    optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
+    optimizerDictionary['AdaDerivative']['learningRate'] = 1e-1
 
-    if objectiveFunctionName == 'Rastrigin':
-        optimizerDictionary['SGD']['learningRate'] = 2e-1
-        optimizerDictionary['AdaGrad']['learningRate'] = 5e-1
-        optimizerDictionary['RMSprop']['learningRate'] = 5e-2
-        optimizerDictionary['Adadelta']['learningRate'] = 2e+1
-        optimizerDictionary['AdamW']['learningRate'] = 1e-1
-        optimizerDictionary['RAdam']['learningRate'] = 2e-1
-        optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
-        optimizerDictionary['AdaDerivative']['learningRate'] = 1e-1
-        optimizerDictionary['Lion']['learningRate'] = 1e-1
-    else:
-        optimizerDictionary['SGD']['learningRate'] = 1e-1
-        optimizerDictionary['AdaGrad']['learningRate'] = 2e-1
-        optimizerDictionary['RMSprop']['learningRate'] = 2e-2
-        optimizerDictionary['Adadelta']['learningRate'] = 1e+1
-        optimizerDictionary['AdamW']['learningRate'] = 1e-1
-        optimizerDictionary['RAdam']['learningRate'] = 1e-1
-        optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
-        optimizerDictionary['AdaDerivative']['learningRate'] = 1e-1
-        optimizerDictionary['Lion']['learningRate'] = 5e-2
+
+
 
     for key in optimizerDictionary:
         if objectiveFunctionName == 'Rastrigin':
@@ -279,28 +266,21 @@ for objectiveFunctionName in objectiveFunctionNames:
             x = torch.tensor(- 0.9, requires_grad=True)
             y = torch.tensor(0.9, requires_grad=True)
         optimizerDictionary[key]['parameters'] = [x, y]
-        optimizerDictionary[key]['xList'] = [optimizerDictionary[key]['parameters'][0].item()]
-        optimizerDictionary[key]['yList'] = [optimizerDictionary[key]['parameters'][1].item()]
-        optimizerDictionary[key]['zList'] = [objectiveFunction(objectiveFunctionName, x, y).item()]
+        optimizerDictionary[key]['xList'] = []
+        optimizerDictionary[key]['yList'] = []
+        optimizerDictionary[key]['zList'] = []
+
 
         if key == 'SGD':
-            optimizerDictionary['SGD']['optimizer'] = torch.optim.SGD(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['SGD']['learningRate'])
-        elif key == 'AdaGrad':
-            optimizerDictionary['AdaGrad']['optimizer'] = torch.optim.Adagrad(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaGrad']['learningRate'])
-        elif key == 'RMSprop':
-            optimizerDictionary['RMSprop']['optimizer'] = torch.optim.RMSprop(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['RMSprop']['learningRate'])
-        elif key == 'Adadelta':
-            optimizerDictionary['Adadelta']['optimizer'] = torch.optim.Adadelta(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['Adadelta']['learningRate'])
-        elif key == 'AdamW':
-            optimizerDictionary['AdamW']['optimizer'] = torch.optim.AdamW(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdamW']['learningRate'])
-        elif key == 'RAdam':
-            optimizerDictionary['RAdam']['optimizer'] = torch.optim.RAdam(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['RAdam']['learningRate'],  betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3)
-        elif key == 'AdaBelief':
-            optimizerDictionary['AdaBelief']['optimizer'] = AdaBelief.AdaBelief(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaBelief']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3)
-        elif key == 'AdaDerivative':
-            optimizerDictionary['AdaDerivative']['optimizer'] = AdaDerivative.AdaDerivative(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaDerivative']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-3, rectify=False)
+            optimizerDictionary['SGD']['optimizer'] = SGD.SGD(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['SGD']['learningRate'], weight_decay=1e-16)
         elif key == 'Lion':
-            optimizerDictionary['Lion']['optimizer'] = Lion(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['Lion']['learningRate'], weight_decay=1e-8)
+            optimizerDictionary['Lion']['optimizer'] = Lion.Lion(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['Lion']['learningRate'], betas=(0.9, 0.99), weight_decay=1e-16)
+        elif key == 'AdamW':
+            optimizerDictionary['AdamW']['optimizer'] = AdamW.AdamW(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdamW']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-16)
+        elif key == 'AdaBelief':
+            optimizerDictionary['AdaBelief']['optimizer'] = AdaBelief.AdaBelief(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaBelief']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-16)
+        elif key == 'AdaDerivative':
+            optimizerDictionary['AdaDerivative']['optimizer'] = AdaDerivative.AdaDerivative(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaDerivative']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-16)
 
 
 
@@ -342,14 +322,15 @@ for objectiveFunctionName in objectiveFunctionNames:
             optimizerDictionary[key]['optimizer'].zero_grad()
             outputs = objectiveFunction(objectiveFunctionName, optimizerDictionary[key]['parameters'][0], optimizerDictionary[key]['parameters'][1])
             outputs.backward()
-            optimizerDictionary[key]['optimizer'].step()
             optimizerDictionary[key]['xList'].append(optimizerDictionary[key]['parameters'][0].item())
             optimizerDictionary[key]['yList'].append(optimizerDictionary[key]['parameters'][1].item())
             optimizerDictionary[key]['zList'].append(outputs.item())
+            optimizerDictionary[key]['optimizer'].step()
             labelString = key + ': lr ' + str(optimizerDictionary[key]['learningRate'])
-            plot1 = axis1.plot(optimizerDictionary[key]['xList'], optimizerDictionary[key]['yList'], optimizerDictionary[key]['zList'], color=optimizerDictionary[key]['color'], marker='o',  linestyle='solid', alpha=0.75, markersize=1, zorder=4)
-            plot1 = axis1.plot(optimizerDictionary[key]['xList'][-1], optimizerDictionary[key]['yList'][-1], optimizerDictionary[key]['zList'][-1], color=optimizerDictionary[key]['color'], marker='o',  linestyle='solid', alpha=1.0, markersize=8, zorder=4, label=labelString)
-            plotScatter1 = axis2.scatter(optimizerDictionary[key]['xList'][-1], optimizerDictionary[key]['yList'][-1], s=48, color =optimizerDictionary[key]['color'], alpha=0.75, zorder=2)
+            plot1 = axis1.plot(optimizerDictionary[key]['xList'], optimizerDictionary[key]['yList'], optimizerDictionary[key]['zList'], color=optimizerDictionary[key]['color'], marker='',  linestyle='-', alpha=0.8, markersize=1, zorder=4)
+            plot1 = axis1.plot(optimizerDictionary[key]['xList'][-1], optimizerDictionary[key]['yList'][-1], optimizerDictionary[key]['zList'][-1], color=optimizerDictionary[key]['color'], marker='o',  linestyle='-', alpha=1.0, markersize=8, zorder=4, label=labelString)
+            plotScatter1 = axis2.plot(optimizerDictionary[key]['xList'], optimizerDictionary[key]['yList'], color =optimizerDictionary[key]['color'], marker='',  linestyle='-', alpha=0.8, markersize=1, zorder=2)
+            plotScatter1 = axis2.plot(optimizerDictionary[key]['xList'][-1], optimizerDictionary[key]['yList'][-1], color =optimizerDictionary[key]['color'], marker='o',  linestyle='-', alpha=1.0, markersize=8, zorder=2)
 
             #axis1.set_xlabel('x', fontsize=8)
             #axis1.set_ylabel('y', fontsize=8)
