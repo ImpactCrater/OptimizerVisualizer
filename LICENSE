@@ -25,9 +25,10 @@ SOFTWARE.
 
 
 
-"SGD.py", "Lion.py", "AdamW.py", "AdaBelief.py" and "AdaDerivative.py" scripts
-included in this repository are modified by ImpactCrater from original
-AdaBelief Optimizer script, which is copyrighted by Juntang Zhuang
+"SGD.py", "Lion.py", "AdamW.py", "AdaBelief.py", "AdaDerivative.py" and
+"AdaBelief.py" scripts included in this repository are modified
+by ImpactCrater from original AdaBelief Optimizer script, which is
+copyrighted by Juntang Zhuang
 (https://github.com/juntang-zhuang/Adabelief-Optimizer/tree/update_0.2.0)
 
 Adabelief-Optimizer License
