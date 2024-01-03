@@ -12,10 +12,11 @@ from torch.utils.data import DataLoader, Dataset
 import torchvision
 from torchvision import transforms, utils
 import SGD
+import Lion
 import AdamW
 import AdaDerivative
 import AdaBelief
-import Lion
+import AdaBC
 import matplotlib
 from matplotlib import pyplot
 from matplotlib.colors import LogNorm
@@ -234,13 +235,14 @@ else:
 
 
 
-optimizerDictionary = {'SGD': {}, 'Lion': {}, 'AdamW': {}, 'AdaBelief': {}, 'AdaDerivative': {}}
+optimizerDictionary = {'SGD': {}, 'Lion': {}, 'AdamW': {}, 'AdaBelief': {}, 'AdaDerivative': {}, 'AdaBC': {}}
 
 optimizerDictionary['SGD']['color'] = 'magenta'
 optimizerDictionary['Lion']['color'] = 'darkorange'
 optimizerDictionary['AdamW']['color'] = 'blue'
 optimizerDictionary['AdaBelief']['color'] = 'red'
 optimizerDictionary['AdaDerivative']['color'] = 'yellow'
+optimizerDictionary['AdaBC']['color'] = 'lawngreen'
 
 
 
@@ -251,6 +253,7 @@ for objectiveFunctionName in objectiveFunctionNames:
     optimizerDictionary['AdamW']['learningRate'] = 1e-1
     optimizerDictionary['AdaBelief']['learningRate'] = 1e-1
     optimizerDictionary['AdaDerivative']['learningRate'] = 1e-1
+    optimizerDictionary['AdaBC']['learningRate'] = 1e-1
 
 
 
@@ -281,6 +284,8 @@ for objectiveFunctionName in objectiveFunctionNames:
             optimizerDictionary['AdaBelief']['optimizer'] = AdaBelief.AdaBelief(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaBelief']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-16)
         elif key == 'AdaDerivative':
             optimizerDictionary['AdaDerivative']['optimizer'] = AdaDerivative.AdaDerivative(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaDerivative']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-16)
+        elif key == 'AdaBC':
+            optimizerDictionary['AdaBC']['optimizer'] = AdaBC.AdaBC(params=optimizerDictionary[key]['parameters'], lr=optimizerDictionary['AdaBC']['learningRate'], betas=(0.9, 0.999), eps=1e-16, weight_decay=1e-16)
 
 
 
