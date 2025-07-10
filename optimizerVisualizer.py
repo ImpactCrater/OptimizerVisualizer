@@ -23,7 +23,13 @@ from matplotlib.colors import LogNorm
 from matplotlib.animation import FuncAnimation
 
 
-#python3 ~/Program/OptimizerVisualizer/optimizerVisualizer.py
+# Execution
+'''
+cd ~/Program/OptimizerVisualizer/
+source venv3.12/bin/activate
+python3 ~/Program/OptimizerVisualizer/optimizerVisualizerZeroth.py
+deactivate
+'''
 
 
 # Mini Batch
@@ -35,7 +41,7 @@ homePath = expanduser("~")
 plotImagePath = homePath + "/Program/OptimizerVisualizer/Plots"
 
 
-objectiveFunctionNames = ['Rosenbrock', 'SixHumpCamel', 'Sphere', 'Rastrigin', 'Custom', 'Custom2', 'Custom3']
+objectiveFunctionNames = ["Rosenbrock", "SixHumpCamel", "Sphere", "Rastrigin", "Custom", "Custom2", "Custom3", "Custom4"]
 
 
 numberOfFrames = 100
@@ -44,7 +50,6 @@ numberOfFrames = 100
 pi = torch.tensor(math.pi)
 e = torch.tensor(math.e)
 deltaZ = 1e-5
-
 
 
 
@@ -198,6 +203,41 @@ def custom3Function(x, y):
     return z
 
 
+def custom4Function(x, y):
+    scaleX1 = torch.tensor(- 5)
+    scaleY1 = torch.tensor(- 5)
+    rangeZ1 = 0.97691298 - 0.00002000 # Maximum: 0.97691298, Minimum: 0.00002000
+    scaleZ1 = torch.tensor(rangeZ1)
+    shiftZ1 = torch.tensor(- 0.00002000)
+    x1 = x * scaleX1
+    y1 = y * scaleY1
+    z1 = (x1 ** 2 + y1 - 11) ** 2 + (x1 + y1 ** 2 - 7) ** 2
+    z1 = torch.tanh(z1 / 400)
+    z1 = (z1 + shiftZ1) / scaleZ1 * (1 - deltaZ) + deltaZ
+
+    shiftX2 = torch.tensor(0.)
+    shiftY2 = torch.tensor(0.)
+    rangeZ2 = 4.97492075 + 1.35411644 # Maximum: 4.97492075, Minimum: -1.35411644
+    scaleZ2 = torch.tensor(rangeZ2)
+    shiftZ2 = torch.tensor(1.35411644)
+    x2 = x + shiftX2
+    y2 = y + shiftY2
+    a = 0.9
+    r = torch.sqrt(x2 ** 2 + y2 ** 2)
+    Theta = torch.arctan2(y2, x2) - torch.pi / 2 # [- π, π]
+    Theta = torch.where(Theta < 0, Theta + 2 * torch.pi, Theta)
+    z2 = (r - a * Theta) + 4.
+    z2 = (z2 + shiftZ2) / scaleZ2 * (1 - deltaZ) + deltaZ
+
+    rangeZ = 2.39048314 - 0.34079576 # Maximum: 2.39048314, Minimum: 0.34079576
+    scaleZ = torch.tensor(rangeZ)
+    shiftZ = torch.tensor(- 0.34079576)
+
+    z = z1 + 1.5 * z2
+    z = (z + shiftZ) / scaleZ * (1 - deltaZ) + deltaZ
+    return z
+
+
 
 def objectiveFunction(objectiveFunctionName, x, y):
     if objectiveFunctionName == 'Rosenbrock':
@@ -220,6 +260,9 @@ def objectiveFunction(objectiveFunctionName, x, y):
 
     elif objectiveFunctionName == 'Custom3':
         return custom3Function(x, y)
+
+    elif objectiveFunctionName == 'Custom4':
+        return custom4Function(x, y)
 
 
 
