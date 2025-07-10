@@ -43,3 +43,11 @@ pip install lion-pytorch
 <div align="center">
 	<img src="plots/Optimizers (Sphere) AdaBC.gif"/>
 </div>
+
+<div align="center">
+	<img src="plots/Optimizers (Spiral).gif"/>
+</div>
+
+<div align="center">
+	<img src="plots/Optimizers (Spiral) Zeroth.gif"/>
+</div>
